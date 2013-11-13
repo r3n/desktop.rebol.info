@@ -1,0 +1,7 @@
+<body>
+<h1>Cannot Resolve URL</h1>
+<div class="well">
+	<p>If this is a valid, working HTTP(S) URL, please try again. However, it's more than likely we can't reach it so it won't work:</p>
+	<pre><%== location %></pre>
+</div>
+</body>

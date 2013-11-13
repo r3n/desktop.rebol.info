@@ -1,0 +1,7 @@
+<body>
+<h1>Could Not Connect to URL</h1>
+<div class="well">
+	<p>We tried to access the provided URL, however the response we received was:</p>
+	<pre><%== payload/status %>: <%== payload/message %></pre>
+</div>
+</body>

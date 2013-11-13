@@ -1,0 +1,7 @@
+<body>
+<h1>URL Does Not Conform</h1>
+<div class="well">
+	<p>We cannot use the URL as entered:</p>
+	<pre><%== param %></pre>
+</div>
+</body>

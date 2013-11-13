@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><%== meta/title: any [meta/title "Script"] %></title>
+<meta charset="utf-8" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="<%== link-up location %>" />
+<meta property="og:title" content="<%== meta/title %>" />
+<meta property="og:description" content="<%== meta/purpose: any [meta/purpose "Rebol Script"] %>" />
+<meta name="description" content="<%== meta/purpose %>" />
+<meta property="og:image" content="http://reb4.me/x/forklogo-sketch.png" />
+<meta property="og:site_name" content="Rebol Desktop Viewer" />
+<link rel="stylesheet" type="text/css" href="/assets/rebol.css" />
+</head>
+
+<body class="script dark">
+<%= yield %>
+</body>
+</html>

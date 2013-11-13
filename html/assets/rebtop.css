@@ -1,0 +1,120 @@
+@css {
+	title: "RebTop Viewer";
+}
+
+body {
+	background-color: rgb(160,180,160);
+	background-repeat: no-repeat;
+	background-position: center top;
+	color: black;
+	font: 14px/1.2 "Helvetica", "Arial", sans-serif;
+}
+
+body.fit, body.extend {
+/*	background-position: left top;*/
+	background-size: 100vw 100vh;
+	background-attachment: fixed;
+}
+
+body.aspect {
+/*	background-position: left top;*/
+	background-size: 100vw;
+	background-attachment: fixed;
+}
+
+body.tile {
+	background-repeat: repeat;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #900;
+}
+
+h1, p, ul, pre, div.well {
+	margin: 1em 0;
+	padding: 0;
+/*	text-align: center;*/
+}
+
+h1 {
+	margin: 1em 0 0.4em;
+	font-size: 1.7em;
+	font-weight: bold;
+}
+
+p, pre, ul li {
+	margin: 1em 0;
+}
+
+div.well {
+	background: rgba(255,255,255,0.2);
+	box-shadow: inset 2px 2px 6px rgba(100,120,100,0.4), inset -2px -2px 10px rgba(255,255,255,0.1);
+	border-radius: 0.4em;
+	padding: 0.6em 0;
+}
+
+div.well p, div.well pre, div.well ul li {
+	margin: 0.9em;
+}
+
+ul.icons li {
+/*	background: rgba(0,0,0,0.1);*/
+	position: relative;
+	font-size: 0.84em;
+	list-style: none inside;
+	display: inline-block;
+	width: 100px; height: 100px;
+/*	overflow: hidden;*/
+	margin: 0 0.5em 0.9em;
+	text-align: center;
+/*	border: 1px solid #666;*/
+}
+
+ul.icons li figure {
+/*	background: rgba(0,0,0,0.1);*/
+	margin: 0; padding: 0;
+	position: absolute; bottom: 0;
+	width: 100px;
+}
+
+ul.icons li figure img {
+/*	position: absolute; bottom: 0; left: 50%;*/
+	display: inline-block;
+	margin: 0 auto;
+	max-width: 100px;
+	max-height: 70px;
+}
+
+ul.icons li figure figcaption {
+/*	background: rgba(0,0,0,0.1);*/
+	margin: 0.4em 0 0;
+	line-height: 1.2em;
+	height: 2.4em;
+	word-wrap: break-word;
+}
+
+div#_log {
+	width: 100%;
+	overflow: auto;
+}
+
+@media screen and (min-width: 248px) {ul.icons li {width: 43%;}}
+@media screen and (min-width: 360px) {ul.icons li {width: 28%;}}
+@media screen and (min-width: 472px) {ul.icons li {width: 21%;}}
+@media screen and (min-width: 584px) {ul.icons li {width: 17%;}}
+@media screen and (min-width: 696px) {ul.icons li {width: 14%;}}
+@media screen and (min-width: 808px) {ul.icons li {width: 12%;}}
+@media screen and (min-width: 920px) {ul.icons li {width: 10.5%;}}
+
+@media screen and (min-width: 960px) {
+	h1, p, ul, div.well {
+		width: 940px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}

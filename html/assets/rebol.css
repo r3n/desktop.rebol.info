@@ -1,0 +1,113 @@
+/* Embedded REBOL Header
+-------------------------------------------------------
+[REBOL [title: "Colour Code Stylesheet"
+date: 24-Nov-2003
+author: "Christopher Ross-Gill"
+rights: http://creativecommons.org/licenses/by-sa/3.0/]]
+------------------------------------------------------- */
+
+@import url('http://fonts.googleapis.com/css?family=Inconsolata:400,700');
+
+/* Script Style
+------------------------------------------------------- */
+body.script {background: #fff url('/s/bgy.png') repeat-x 0 0; margin: 2em; text-align: center;}
+body.script .code.rebol {
+	width: 90%;
+	margin: 2em auto;
+	text-align: left;
+	font: 1em "Inconsolata","Courier New",fixed;
+	white-space: pre-wrap;
+}
+
+
+/* Colours (white)
+------------------------------------------------------- */
+.code.rebol a, .code.rebol a:link, .code.rebol a:visited {
+	color: #00c; text-decoration: underline;
+}
+.code.rebol .dt-url a, .code.rebol .dt-url a:link, .code.rebol .dt-url a:visited {
+	text-decoration: none;
+}
+.code.rebol .dt-url a {
+	background: rgba(221,255,221,0.5);
+	border-bottom: 1px dotted #9ca;
+	text-shadow: 0 0 6px #fff;
+}
+.code.rebol a:active, .code.rebol a:hover {color: #c00;}
+.code.rebol var {font-weight: normal; font-style: normal;}
+.code.rebol .dt-function,
+.code.rebol .dt-native {color: #900;}
+.code.rebol .dt-datatype {color: #736;}
+.code.rebol .dt-bitset {color: #072;}
+.code.rebol .dt-binary {color: #041;}
+.code.rebol .dt-char {color: #072;}
+.code.rebol .dt-date {color: #079;}
+.code.rebol .dt-decimal {color: #079;}
+.code.rebol .dt-email {color: #072;}
+.code.rebol .dt-file {color: #072;}
+.code.rebol .dt-integer {color: #079;}
+.code.rebol .dt-issue {color: #072;}
+.code.rebol .dt-lit-word {color: #606;}
+.code.rebol .dt-money {color: #079;}
+.code.rebol .dt-pair {color: #079;}
+.code.rebol .dt-string {color: #072;}
+.code.rebol .dt-bitset {color: #072;}
+.code.rebol .dt-tag {color: #09A;}
+.code.rebol .dt-time {color: #079;}
+.code.rebol .dt-tuple {color: #079;}
+.code.rebol .dt-url, .code.rebol a.dt-url {color: #072;}
+.code.rebol .dt-refinement {color: #972;}
+.code.rebol .dt-set-word,
+.code.rebol .dt-rebol {color: #004; font-weight: bold;}
+.code.rebol .dt-set-path {color: #004; font-weight: bold;}
+.code.rebol .dt-cmt {color: #999; font-style: italic;}
+.code.rebol .dt-preamble {color: #999; font-style: italic;}
+
+/* Colours (dark)
+-------------------------------------------------------*/
+body.script.dark {
+	background: #222;
+	color: #fff;
+	padding: 1em;
+	font-weight: normal;
+	font-style: normal;
+}
+
+.dark .code.rebol .dt-word, .dark .code.rebol .dt-get-word {color: #ffe9b5;}
+.dark .code.rebol .dt-function,
+.dark .code.rebol .dt-native {color: #ffde2d;}
+.dark .code.rebol .dt-datatype {color: #ffde2d;}
+.dark .code.rebol .dt-bitset {color: #93fe64;}
+.dark .code.rebol .dt-binary {color: #93fe64;}
+.dark .code.rebol .dt-char {color: #93fe64;}
+.dark .code.rebol .dt-date {color: #fff;}
+.dark .code.rebol .dt-decimal {color: #fff;}
+.dark .code.rebol .dt-email {color: #93fe64;}
+.dark .code.rebol .dt-file {color: #93fe64;}
+.dark .code.rebol .dt-integer {color: #fff;}
+.dark .code.rebol .dt-issue {color: #44acf8;}
+.dark .code.rebol .dt-lit-word {color: #fff;}
+.dark .code.rebol .dt-logic {color: #fff;}
+.dark .code.rebol .dt-money {color: #fff;}
+.dark .code.rebol .dt-none {color: #fff;}
+.dark .code.rebol .dt-pair {color: #fff;}
+.dark .code.rebol .dt-string {color: #93fe64;}
+.dark .code.rebol .dt-tag {color: #39ebd5;}
+.dark .code.rebol .dt-time {color: #fff;}
+.dark .code.rebol .dt-tuple {color: #fff;}
+.dark .code.rebol .dt-url {color: #55acf8;}
+.dark .code.rebol .dt-refinement {color: #ffe9b5;}
+.dark .code.rebol .dt-set-word,
+.dark .code.rebol .dt-rebol {color: #f66; font-weight: bold;}
+.dark .code.rebol .dt-set-path {color: #f66; font-weight: bold;}
+.dark .code.rebol .dt-cmt {background: #000; color: #bbb; font-style: italic;}
+.dark .code.rebol .dt-preamble {color: #bbb; font-style: italic;}
+.dark .code.rebol .dt-url a:active,
+.dark .code.rebol .dt-url a:hover {color: #dfb;}
+.dark .code.rebol .dt-url a,
+.dark .code.rebol .dt-url a:link,
+.dark .code.rebol .dt-url a:visited {
+	background: #000;
+	color: #39ebd5; text-decoration: underline;
+	border: none; text-shadow: none;
+}
