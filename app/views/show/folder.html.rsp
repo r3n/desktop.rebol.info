@@ -1,58 +1,39 @@
-<body class="<%= any [folder/stretch 'fit] %>"><% if any [folder/color folder/image folder/text not empty? folder/effects][
-%><style type="text/css" media="screen"><!--
+<body class="<%= any [folder/stretch 'fit] %>"><%
+
+if any [folder/color folder/image folder/text not empty? folder/effects][
+%><style type="text/css" media="screen"><!-- <%= render/partial %style %> --></style>
 <%
+]
 
-	if any [folder/text folder/color folder/image not empty? folder/effects][
-		print "body {"
+%>
+<h1><%== title %></h1><% if folder/summary [ %>
+<p><%== folder/summary %></p><% ] %>
+<ul class="icons"><%
 
-		case/all [
-			folder/color [
-				print form-property background-color: [folder/color]
-				if (folder/color/1 + folder/color/2 + folder/color/3) < 100 [
-					print form-property color: any [folder/text "white"]
-				]
-			]
-			folder/image [print form-property background-image: [folder/image]]
-			folder/text [print form-property color: [folder/text]]
+	foreach item folder/items [
+
+%>
+<li>
+	<%! a (
+		either any [item/type = 'folder find [%.r %reb %.red %.reds] suffix? item/target][
+			link-up item/target
+		][
+			item/target
 		]
+	) (any [item/info ""]) %>
+		<figure>
+			<%! img (
+				either word? item/icon [
+					rejoin [%/assets/icons/ form item/icon %.png]
+				][item/icon]
+			) (any [item/info ""]) %>
+			<figcaption><%== any [item/name "Link"] %></figcaption>
+		</figure>
+	</a>
+</li><%
 
-		foreach effect folder/effects [
-			switch effect/type [
-				gradient [
-					print form-property background-image: [
-						"linear-gradient("
-						switch/default effect/direction [
-							1x1 ["135deg"] 0x1 ["180deg"] 0x0 -1x1 ["225deg"]
-							-1x0 ["270deg"] -1x-1 ["315deg"] 0x-1 ["to top"]
-							1x-1 ["45deg"] 1x0 ["90deg"]
-						]["to bottom"]
-						"," effect/from "," effect/thru ")"
-					]
-				]
-			]
-		]
-
-		print "}"
-	]
-
-	if folder/text [
-		print ["a {" form-property color: folder/text "}"]
-		print ["a:hover {" form-property color: any [folder/over folder/text] "}"]
 	]
 
 %>
---></style>
-<% ] %>
-<h1><%== title %></h1><% if folder/summary [ %>
-<p><%== folder/summary %></p><% ] %>
-<ul class="icons"><% foreach icon folder/icons [ %>
-<li>
-	<%! a (icon/link) (any [icon/info ""]) %>
-		<figure>
-			<%! img (icon/icon) (any [icon/info ""]) %>
-			<figcaption><%== any [icon/name "Link"] %></figcaption>
-		</figure>
-	</a>
-</li><% ] %>
 </ul>
 </body>

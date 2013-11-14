@@ -1,0 +1,41 @@
+<%
+
+	if any [folder/text folder/color folder/image not empty? folder/effects][
+		print "body {"
+
+		case/all [
+			folder/color [
+				print form-property background-color: [folder/color]
+				if (folder/color/1 + folder/color/2 + folder/color/3) < 100 [
+					print form-property color: any [folder/text "white"]
+				]
+			]
+			folder/image [print form-property background-image: [folder/image]]
+			folder/text [print form-property color: [folder/text]]
+		]
+
+		foreach effect folder/effects [
+			switch effect/type [
+				gradient [
+					print form-property background-image: [
+						"linear-gradient("
+						switch/default effect/direction [
+							1x1 ["135deg"] 0x1 ["180deg"] 0x0 -1x1 ["225deg"]
+							-1x0 ["270deg"] -1x-1 ["315deg"] 0x-1 ["to top"]
+							1x-1 ["45deg"] 1x0 ["90deg"]
+						]["to bottom"]
+						"," effect/from "," effect/thru ")"
+					]
+				]
+			]
+		]
+
+		print "}"
+	]
+
+	if folder/text [
+		print ["a {" form-property color: folder/text "}"]
+		print ["a:hover {" form-property color: any [folder/over folder/text] "}"]
+	]
+
+%>

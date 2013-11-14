@@ -3,42 +3,10 @@ REBOL [
 	Date: 21-Oct-2013
 	Author: "Christopher Ross-Gill"
 	Type: 'module
-	Exports: [script? load-header color-code form-property]
+	Exports: [color-code]
 ]
 
-system/standard/script: make system/standard/script [Type: none]
-
-script?: use [space id mark type][
-	space: charset " ^-"
-	id: [
-		any space mark: 
-		any ["[" mark: (mark: back mark) any space]
-		copy type ["REBOL" | "Red" opt "/System" | "Topaz" | "Freebell"]
-		any space
-		"[" to end
-	]
-
-	func [source [string! binary!] /language][
-		if all [
-			parse/all source [
-				some [
-					id break |
-					(mark: none)
-					thru newline opt #"^M"
-				]
-			]
-			mark
-		][either language [type][mark]]
-	]
-]
-
-load-header: func [[catch] source [string! binary!] /local header][
-	source: to string! source
-	unless header: script? source [make error! "Source does not contain header."]
-	header: find next header "["
-	unless header: attempt [load/next header][make error! "Header is incomplete."]
-	reduce [construct/with header/1 system/standard/script header/2]
-]
+require %markup/header.r
 
 color-code: use [out emit whitelist emit-var emit-header rule value][
 	out: none
@@ -159,33 +127,5 @@ color-code: use [out emit whitelist emit-var emit-header rule value][
 
 		insert out {<pre class="code rebol">}
 		append out {</pre>}
-	]
-]
-
-form-color: func [value [tuple!]][
-	rejoin either value/4 [
-		["rgba(" value/1 "," value/2 "," value/3 "," either integer? value: value/4 / 255 [value][round/to value 0.01] ")"]
-	][
-		["rgb(" value/1 "," value/2 "," value/3")"]
-	]
-]
-
-form-url: func [value [url! file!]][
-	rejoin ["url('" value "')"]
-]
-
-form-property: func ['property [set-word!] values [any-type!]][
-	rejoin collect [
-		keep mold property
-		foreach value reduce envelop values [
-			keep " "
-			keep switch/default type?/word value [
-				url! [form-url value]
-				tuple! [form-color value]
-			][
-				form value
-			]
-		]
-		keep ";"
 	]
 ]
