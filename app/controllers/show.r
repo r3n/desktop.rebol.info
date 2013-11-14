@@ -21,7 +21,8 @@ event "after" does [
 route () to %folder [
 	verify [
 		location: either empty? param: request/query-string [
-			http://www.rebol.com/view/public.r
+			; http://www.rebol.com/view/public.r
+			http://desktop.rebol.info/rebsites.r
 		][
 			as url! url-decode param
 		][
