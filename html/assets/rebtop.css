@@ -35,6 +35,10 @@ a:hover {
 	color: #900;
 }
 
+a img {
+	border: none;
+}
+
 h1, p, ul, pre, div.well {
 	margin: 1em 0;
 	padding: 0;
