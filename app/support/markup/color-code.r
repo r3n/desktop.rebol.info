@@ -23,9 +23,10 @@ color-code: use [out emit whitelist emit-var emit-header rule value][
 		| "opensource.org"
 	]
 
-	emit-var: func [value start stop /local type][
+	emit-var: func [value start stop /local type out][
 		either none? :value [type: "cmt"][
 			if path? :value [value: first :value]
+
 			type: either word? :value [
 				any [
 					all [find [Rebol Red Topaz Freebell] value "rebol"]
@@ -38,29 +39,26 @@ color-code: use [out emit whitelist emit-var emit-header rule value][
 			]
 		]
 
-		value: either all [
+		out: sanitize copy/part start stop
+
+		either all [
 			url? value
 			parse/all value [
 				"http" opt "s" "://" whitelist to end
 			]
 		][
 			rejoin [
-				"-[" {-a class=-|} {-dt-url-} {|- href=-|} "-" value "-" {|--} "]-" copy/part start stop "-[" {-/a-} "]-"
+				{<a class="dt-url" href="} out {">} out {</a>}
 			]
 		][
-			copy/part start stop
-		]
-
-		either type [ ; (Done this way so script can color itself.)
-			emit [
-				"-[" {-var class=-|} {-dt-} type {-} {|--} "]-"
-				value
-				"-[" "-/var-" "]-"
+			either type [
+				emit [{<var class="dt-} type {">} out {</var>}]
+			][
+				emit out
 			]
-		][
-			emit value
 		]
 	]
+
 
 	rule: use [str new rule hx percent][
 		hx: charset "0123456789abcdefABCDEF"
@@ -110,20 +108,15 @@ color-code: use [out emit whitelist emit-var emit-header rule value][
 			make error! "Not a REBOL script."
 		]
 
-		emit [
-			"-[" {-var class=-|} {-dt-preamble-} {|--} "]-"
-			copy/part head text text
-			"-[" "-/var-" "]-"
-		] 
-		parse/all text [rule]
-		out: sanitize to string! out
-
-		foreach [from to] reduce [ ; (join avoids the pattern)
-			; "&" "&amp;" "<" "&lt;" ">" "&gt;" "^(A9)2" "&copy;2"
-			join "-[" "-" "<" join "-" "]-" ">" join "-|" "-" {"}
-		][
-			replace/all out from to
+		unless head? text [
+			emit [
+				{<var class="dt-preamble">}
+				sanitize copy/part head text text
+				"</var>"
+			] 
 		]
+
+		parse/all text [rule]
 
 		insert out {<pre class="code rebol">}
 		append out {</pre>}
