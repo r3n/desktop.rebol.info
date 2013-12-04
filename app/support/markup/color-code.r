@@ -119,6 +119,6 @@ color-code: use [out emit whitelist emit-var emit-header rule value][
 		parse/all text [rule]
 
 		insert out {<pre class="code rebol">}
-		append out {</pre>}
+		to string! append out {</pre>}
 	]
 ]
