@@ -41,7 +41,7 @@ color-code: use [out emit whitelist emit-var emit-header rule value][
 
 		out: sanitize copy/part start stop
 
-		either all [
+		emit either all [
 			url? value
 			parse/all value [
 				"http" opt "s" "://" whitelist to end
@@ -52,9 +52,9 @@ color-code: use [out emit whitelist emit-var emit-header rule value][
 			]
 		][
 			either type [
-				emit [{<var class="dt-} type {">} out {</var>}]
+				[{<var class="dt-} type {">} out {</var>}]
 			][
-				emit out
+				out
 			]
 		]
 	]
