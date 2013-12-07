@@ -14,13 +14,7 @@ if any [folder/color folder/image folder/text not empty? folder/effects][
 
 %>
 <li>
-	<%! a (
-		either any [item/type = 'folder find [%.r %reb %.red %.reds] suffix? item/target][
-			link-up item/target
-		][
-			item/target
-		]
-	) (any [item/info ""]) %>
+	<%! a (either item/type = 'folder [link-up/force item/target][link-up item/target]) (any [item/info ""]) %>
 		<figure>
 			<%! img (
 				either word? item/icon [

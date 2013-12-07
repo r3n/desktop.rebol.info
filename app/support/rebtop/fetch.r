@@ -57,9 +57,9 @@ unsupported-effects: [
 	| 'colorize tuple!
 	| 'multiply tuple!
 	| 'difference tuple!
-	| 'gradient pair! tuple! tuple!
-	| 'gradcol pair! tuple! tuple!
-	| 'gradmul pair! tuple! tuple!
+	; | 'gradient pair! tuple! tuple!
+	; | 'gradcol pair! tuple! tuple!
+	; | 'gradmul pair! tuple! tuple!
 	| 'key [tuple! | integer!]
 	| 'shadow pair!
 	| 'draw block!
@@ -200,7 +200,7 @@ load-index: func [location [url!] payload [object!] /local source][
 	]
 ]
 
-fetch: func [location [url!]][
+fetch: func [location [url!] /text][
 	context [
 		disposition: target: payload: source: meta: content: none
 

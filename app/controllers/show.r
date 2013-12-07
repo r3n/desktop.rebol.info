@@ -6,12 +6,6 @@ REBOL [
 	Template: %rebtop.rsp
 ]
 
-event "before" does [
-	link-up: func [location [url!]][
-		join settings/home [%show? location]
-	]
-]
-
 event "after" does [
 	; adds a template to the 'rejected views
 	title: any [title header/title]
@@ -36,6 +30,7 @@ route () to %folder [
 
 		switch item/disposition [
 			index [
+				require %display/link-up.r
 				require %display/css-properties.r
 				folder: item/content
 				title: any [folder/title "Folder Content"]
@@ -43,6 +38,7 @@ route () to %folder [
 
 			script [
 				meta: item/meta
+				require %display/link-up.r
 				require %markup/color-code.r
 				render/template color-code item/source %script.rsp
 			]
