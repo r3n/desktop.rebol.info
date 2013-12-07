@@ -4518,7 +4518,7 @@ if qm/live? [
 
 		attempt [
 			save to url! form-date/gmt now "wrt://space/crash/err%Y%m%d-%H%M%S.txt" reduce [
-				now form qm/request/request-uri reason
+				now qm/request/server-name form qm/request/request-uri reason
 			]
 		]
 	]
