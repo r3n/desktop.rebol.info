@@ -1,0 +1,11 @@
+<%
+
+foreach part extract-urls item/source [
+
+	either url? part [
+		%><%! a (either parse/all part amend [word "://" to end][part][join http:// part]) %><%== part %></a><%
+	][
+		prin sanitize part
+	]
+
+] %>

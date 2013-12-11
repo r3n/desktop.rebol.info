@@ -44,13 +44,34 @@ route () to %folder [
 			]
 
 			redirect [
-				location: link-up item/target
+				require %display/link-up.r
+				location: link-up/force item/target
 				redirect-to :location
 			]
 
 			no-resource [reject 404 %no-resource.rsp]
 			bad-address [reject 404 %not-resolved.rsp]
 			no-header [reject 415 %not-rebol.rsp]
+		]
+	]
+
+	get %.txt [
+		require %rebtop/fetch.r
+		item: fetch/text location
+
+		switch/default item/disposition [
+			redirect [
+				require %display/link-up.r
+				location: link-up item/target
+				redirect-to :location
+			]
+
+			no-resource [reject 404 %no-resource.rsp]
+			bad-address [reject 404 %not-resolved.rsp]
+		][
+			require %display/link-up.r
+			require %text/urls.r
+			render/template %text %text.rsp
 		]
 	]
 ]

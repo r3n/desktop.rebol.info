@@ -6,6 +6,8 @@ REBOL [
 	Exports: [fetch]
 ]
 
+; need to separate fetch function from content-sniffer.
+
 parse-url: func [url [url!] /local out][
 	out: context [user: pass: host: port-id: path: target: scheme: none]
 	net-utils/URL-Parser/parse-url/set-scheme out url
@@ -110,13 +112,17 @@ rule: use [value][
 			| 'backdrop [
 				some [
 					  set value 'tile (folder/stretch: 'tile)
-					| set value [file! | url!] (folder/image: resolve value)
+					| set value [file! | url!] (
+						folder/image: resolve value
+						folder/stretch: any [folder/stretch 'fit]
+					)
 					; | set value path! (if 'view-root = first :value [folder/image: value])
 					| set value tuple! (folder/color: value)
 					| set value into [
 						any [
 							  set value ['fit | 'aspect | 'extend | 'tile] (folder/stretch: value)
 							| ['gradient | 'gradmul | 'gradcol] copy value [opt pair! tuple! tuple!] (
+								folder/stretch: 'fit
 								unless pair? value/1 [insert value 1x1]
 								append folder/effects context [
 									type: 'gradient
@@ -239,9 +245,16 @@ fetch: func [location [url!] /text][
 				]
 			]
 
+			all [
+				require %text/clean.r
+				source: clean payload/content
+			][
+				disposition: 'no-header
+			]
+
 			meta: all [
 				require %markup/header.r
-				meta: attempt [load-header source: payload/content]
+				meta: attempt [load-header source]
 				take meta
 			][
 				disposition: 'no-header

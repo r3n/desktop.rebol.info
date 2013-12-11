@@ -4483,6 +4483,7 @@ if qm/live? [
 		with qm [
 			protect 'request
 			protect 'response
+			export [probe]
 			engage-model
 			route request response
 			disengage-model

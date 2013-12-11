@@ -14,7 +14,7 @@ script?: use [space id mark type][
 		any space mark: 
 		any ["[" mark: (mark: back mark) any space]
 		copy type ["REBOL" | "Red" opt "/System" | "Topaz" | "Freebell"]
-		any space
+		any [space | newline | crlf]
 		"[" to end
 	]
 
@@ -24,7 +24,7 @@ script?: use [space id mark type][
 				some [
 					id break |
 					(mark: none)
-					thru newline opt #"^M"
+					thru newline ; opt #"^M"
 				]
 			]
 			mark

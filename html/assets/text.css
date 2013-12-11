@@ -1,0 +1,25 @@
+@css {
+	title: 'Text Stylesheet';
+}
+
+body {
+	margin: 18px;
+	background: #ecdfb8 url('/assets/ruled-bg-yellow.png');
+	color: #330;
+	font: 14px/25px "Courier", "Courier New", fixed;
+}
+
+pre {
+	font: 14px/25px "Courier", "Courier New", fixed;
+	max-width: 960px;
+	white-space: pre-wrap;
+	margin: 0 auto;
+}
+
+body pre a, body pre a:visited {
+	color: #330;
+}
+
+body pre a:hover {
+	color: #c00;
+}

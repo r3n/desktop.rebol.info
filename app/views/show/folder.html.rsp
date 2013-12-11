@@ -1,4 +1,4 @@
-<body class="<%= any [folder/stretch 'fit] %>"><%
+<body class="<%= any [folder/stretch 'tile] %>"><%
 
 if any [folder/color folder/image folder/text not empty? folder/effects][
 %><style type="text/css" media="screen"><!-- <%= render/partial %style %> --></style>
@@ -14,7 +14,11 @@ if any [folder/color folder/image folder/text not empty? folder/effects][
 
 %>
 <li>
-	<%! a (either item/type = 'folder [link-up/force item/target][link-up item/target]) (any [item/info ""]) %>
+	<a href="<%==
+		either item/type = 'folder [link-up/force item/target][link-up item/target] %>" title="<%==
+		any [item/info item/name "Picture"] %>"<%
+		if all [item/type = 'file find [%.gif %.png %.jpg %.svg] suffix? item/target][
+		%> data-lightbox="desktop"<% ] %>>
 		<figure>
 			<%! img (
 				either word? item/icon [

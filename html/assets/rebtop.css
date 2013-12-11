@@ -66,6 +66,9 @@ div.well p, div.well pre, div.well ul li {
 	margin: 0.9em;
 }
 
+div.well li {padding-left: 2em; list-style: none inside;}
+div.well li:before {content: '\2192'; display: inline-block; margin-left: -1.4em; width: 1.4em;}
+
 ul.icons li {
 /*	background: rgba(0,0,0,0.1);*/
 	position: relative;
