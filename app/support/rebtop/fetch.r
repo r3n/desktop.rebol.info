@@ -85,7 +85,8 @@ resolve: use [clean][
 
 	func [path [file! url! word! email!]][
 		switch type?/word path [
-			url! word! email! [path]
+			url! word! [path]
+			email! [to url! join "mailto:" path]
 			file! [
 				rejoin [
 					to url! host/scheme "://" host/host
@@ -143,6 +144,10 @@ rule: use [value][
 			set value ['file | 'folder | 'link | 'service] (item/type: value)
 			some [
 				  set value [file! | url! | email!] (
+					if email? value [
+						item/type: 'link
+						item/icon: 'email
+					]
 					item/target: resolve value
 					if all [
 						item/type = 'folder
