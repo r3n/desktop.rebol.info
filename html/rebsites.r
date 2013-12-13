@@ -1,9 +1,10 @@
 REBOL [Title: "New RebSite Index" Type: 'index]
 title "World Wide Reb Sites" 
 file " About " http://www.rebol.net/reb/about-sites.txt icon text info none 
-file " Add Site " http://www.rebol.net/reb/addsite.r icon rebol info none 
+file " Add Site " https://github.com/revault/desktop.rebol.info/blob/master/html/rebsites.r icon rebol info "Add your site here"
 file " Site Notes" http://www.rebol.net/reb/site-note.txt icon text info "A note about empty sites." 
-folder "REBOL" http://www.rebol.com/index.r icon site info "REBOL Technologies" 
+folder "Rebol" http://www.rebol.com/index.r icon site info "REBOL Technologies" 
+folder "Library" http://www.rebol.org/library/reb/index.r icon site "The shared script library"
 folder "Jeff's" http://www.cs.unm.edu/~whip/index.r icon site info none 
 folder "Code C." http://www.codeconscious.com/index.r icon site info "codeconscious.com" 
 folder "Anton" https://s3-ap-southeast-1.amazonaws.com/antonrolls/rebol/index.r icon site info {Lots of VID GUI styles, utilities, library functions, documentation.} 
