@@ -3,6 +3,7 @@
 <head>
 <title>Text Viewer</title>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="<%== link-up location %>" />
 <meta property="og:image" content="http://reb4.me/x/forklogo-sketch.png" />

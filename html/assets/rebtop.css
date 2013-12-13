@@ -6,6 +6,7 @@ body {
 	background-color: rgb(160,180,160);
 	background-repeat: no-repeat;
 	background-position: center top;
+	background: rgb(140,160,140) url('/assets/pinstripe.png');
 	color: black;
 	font: 14px/1.2 "Helvetica", "Arial", sans-serif;
 }

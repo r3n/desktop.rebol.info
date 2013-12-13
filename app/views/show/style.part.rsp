@@ -18,6 +18,7 @@
 			switch effect/type [
 				gradient [
 					print form-property background-image: [
+						unless folder/image ["url('/assets/pinstripe.png'), "]
 						"linear-gradient("
 						switch/default effect/direction [
 							1x1 ["135deg"] 0x1 ["180deg"] 0x0 -1x1 ["225deg"]
@@ -25,6 +26,10 @@
 							1x-1 ["45deg"] 1x0 ["90deg"]
 						]["to bottom"]
 						"," effect/from "," effect/thru ")"
+					]
+					unless folder/image [
+						print form-property background-repeat: "repeat, no-repeat"
+						print form-property background-size: "auto, 100vw 100vh !important"
 					]
 				]
 			]
