@@ -6,14 +6,19 @@ REBOL [
 ]
 
 title "The Rebol Desktop Project"
-backdrop 140.160.140 [gradient 0x0 200.180.120 150.170.150 grid 150.170.150]
+backdrop 140.160.140 [
+	gradient 0x0 200.180.120 150.170.150 grid 150.170.150
+]
 ; summary ""
 
-link "Source" https://github.com/revault/desktop.rebol.info icon read
-info "This project's source on GitHub"
+file " About " %readme.txt icon read
+info "About this site"
 
-folder "Sites" http://desktop.rebol.info/rebsites.r icon site
+folder "Sites" %rebsites.r icon site
 info "World Wide Reb Sites"
+
+link "Source" https://github.com/revault/desktop.rebol.info
+info "This project's source on GitHub"
 
 link "Rebol" http://rebol.com/
 info "Home of Rebol"
