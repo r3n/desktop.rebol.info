@@ -1,10 +1,16 @@
 <HTML>
 <TITLE>Simple Web Form</TITLE>
 <BODY>
-<b>Write your rebsite here:</b><p>
-<FORM ACTION="addyoursite.cgi">
-<INPUT TYPE="TEXT" NAME="rebsite" SIZE="25" value="http://www.example.com"><BR>
+<div align=center >
+<b>Write your rebsite here:</b>
+<FORM ACTION="addyoursite.rsp">
+<table>
+<tr><td>Link:</td><td> <INPUT TYPE="TEXT" NAME="rebsite"  value="http://www.example.com"></td></tr>
+<tr><td>Name: </td><td><INPUT TYPE="TEXT" NAME="name"  ></td></tr>
+<tr><td>Info: </td><td><INPUT TYPE="TEXT" NAME="infotext"  ></td></tr>
+</table>
 <INPUT TYPE="SUBMIT" NAME="Submit" VALUE="Submit">
 </FORM>
+</div>
 </BODY>
 </HTML>
