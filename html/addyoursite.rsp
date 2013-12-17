@@ -1,14 +1,17 @@
 <HTML><BODY>
 
 <%
-rebsite: select "rebsite" decode-cgi system/options/cgi/query-string
-append rebsite "/index.r"
-rebsite2: join rebsite "index.r"
+alldata: context decode-cgi system/options/cgi/query-string
 
-if exists? rebsite2 [
-  temp: read rebsites.r
-  append temp
+append alldata/rebsite "/index.r"
+
+if exists? alldata/rebsite [
+  temp: read %rebsites.r
+  append temp newline
+  append temp reform [" folder " alldata/name rebsite " icon site info " infotext  ]
+  write %rebsites.r temp
   ] else [
+  print "<h1>ERROR: I can't read your <i>index.r</i></h1>"
   ]
 
 %>
