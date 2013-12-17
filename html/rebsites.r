@@ -1,7 +1,7 @@
 REBOL [Title: "New RebSite Index" Type: 'index]
 title "World Wide Reb Sites" 
 file " About " http://www.rebol.net/reb/about-sites.txt icon text info none 
-link " Add Site " addyoursite.r icon rebol info "Add your site here"
+link " Add Site " addyoursite.html icon rebol info "Add your site here"
 file " Site Notes" http://www.rebol.net/reb/site-note.txt icon text info "A note about empty sites." 
 folder "Rebol" http://www.rebol.com/index.r icon site info "REBOL Technologies" 
 folder "Library" http://www.rebol.org/library/reb/index.r icon site info "The shared script library"
