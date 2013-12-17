@@ -1,0 +1,13 @@
+<HTML><BODY>
+
+<%
+rebsite: select "rebsite" decode-cgi system/options/cgi/query-string
+append rebsite "/index.r"
+
+if exists? rebsite [
+  temp: read rebsites.r
+  ] else [
+  ]
+
+%>
+</body></html>
