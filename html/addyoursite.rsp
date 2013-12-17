@@ -3,9 +3,11 @@
 <%
 rebsite: select "rebsite" decode-cgi system/options/cgi/query-string
 append rebsite "/index.r"
+rebsite2: join rebsite "index.r"
 
-if exists? rebsite [
+if exists? rebsite2 [
   temp: read rebsites.r
+  append temp
   ] else [
   ]
 
