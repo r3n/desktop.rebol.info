@@ -14,9 +14,7 @@ if any [folder/color folder/image folder/text not empty? folder/effects][
 
 %>
 <li>
-	<a href="<%==
-		switch/default item/type [folder [link-up/force item/target] link [item/target]][link-up item/target] %>" title="<%==
-		any [item/info item/name "Picture"] %>"<%
+	<a href="<%== link-up/directive item/target item/type %>" title="<%== any [item/info item/name "Picture"] %>"<%
 		if all [item/type = 'file find [%.gif %.png %.jpg %.svg] suffix? item/target][
 		%> data-lightbox="desktop"<% ] %>>
 		<figure>

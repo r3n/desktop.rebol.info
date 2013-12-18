@@ -22,56 +22,50 @@ route () to %folder [
 		][
 			reject 404 %not-a-url.rsp
 		]
+
+		all [
+			require %rebtop/fetch.r
+			item: fetch location
+			item/disposition = 'ok
+		][
+			switch item/disposition [
+				no-resource [reject 404 %no-resource.rsp]
+				bad-address [reject 404 %not-resolved.rsp]
+				redirect [
+					require %display/link-up.r
+					location: link-up/as item/target any [request/format 'index]
+					redirect-to :location
+				]
+			]
+		]
 	]
 
 	get [
-		require %rebtop/fetch.r
-		item: fetch location
+		either item/load-index [
+			require %display/link-up.r
+			require %display/css-properties.r
+			folder: item/content
+			title: any [folder/title "Folder Content"]
+		][
+			reject 415 %not-rebol.rsp
+		]
+	]
 
-		switch item/disposition [
-			index [
-				require %display/link-up.r
-				require %display/css-properties.r
-				folder: item/content
-				title: any [folder/title "Folder Content"]
-			]
-
-			script [
-				meta: item/meta
-				require %display/link-up.r
-				require %markup/color-code.r
-				render/template color-code item/source %script.rsp
-			]
-
-			redirect [
-				require %display/link-up.r
-				location: link-up/force item/target
-				redirect-to :location
-			]
-
-			no-resource [reject 404 %no-resource.rsp]
-			bad-address [reject 404 %not-resolved.rsp]
-			no-header [reject 415 %not-rebol.rsp]
+	get %.r [
+		either item/load-source [
+			meta: item/meta
+			require %display/link-up.r
+			require %markup/color-code.r
+			render/template color-code item/source %script.rsp
+		][
+			reject 415 %not-rebol.rsp
 		]
 	]
 
 	get %.txt [
-		require %rebtop/fetch.r
-		item: fetch/text location
-
-		switch/default item/disposition [
-			redirect [
-				require %display/link-up.r
-				location: link-up item/target
-				redirect-to :location
-			]
-
-			no-resource [reject 404 %no-resource.rsp]
-			bad-address [reject 404 %not-resolved.rsp]
-		][
-			require %display/link-up.r
-			require %text/urls.r
-			render/template %text %text.rsp
-		]
+		require %display/link-up.r
+		require %text/urls.r
+		item/clean-source
+		render/template %text %text.rsp
 	]
 ]

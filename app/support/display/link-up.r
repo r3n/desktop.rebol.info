@@ -6,20 +6,39 @@ REBOL [
 	Exports: [link-up]
 ]
 
-prefix: func [target [block! file!]][
-	join qm/settings/home target
+show: func [target [none! url!] /with suffix [file!]][
+	rejoin [qm/settings/home %show any [suffix ""] %? target]
 ]
 
-link-up: func [location [url! email!] /force][
-	case [
-		force [prefix [%show? location]]
-		email? location [location]
-		find [%.r %.reb %.red %.reds %.topaz] suffix? location [
-			prefix [%show? location]
+link-up: func [location [url! email!] /as suffix [file! word!] /directive type [word!]][
+	any [
+		switch type [
+			folder [show location]
+			link [location]
 		]
-		find [%.txt] suffix? location [
-			prefix [%show.txt? location]
+
+		switch suffix [
+			%.r %.txt %.rmd %.rhd [
+				show/with location suffix
+			]
+
+			index [
+				show location
+			]
 		]
-		true [location]
+
+		if email? location [
+			to url! join "mailto:" location
+		]
+
+		switch suffix: suffix? location [
+			%.r %.reb %.red %.reds %.topaz [
+				show/with location %.r
+			]
+
+			%.txt %.rmd %.rhd [show/with location suffix]
+		]
+
+		location
 	]
 ]

@@ -180,10 +180,10 @@ rule: use [value][
 						email? item/target ['email]
 						url? item/target [
 							switch/default suffix? item/target [
-								%.r %.reb ['rebol]
+								%.r %.reb %.red %.reds %.rhd ['rebol]
 								%.rip %.zip ['package]
 								%.txt %.text ['text]
-								%.htm %.html ['html]
+								%.htm %.html %.rmd ['html]
 								%.jpg %.png %.gif %.bmp ['image]
 								%.doc %.dot %.rtf ['ms-word]
 								%.xls %.csv ['ms-excel]
@@ -200,22 +200,42 @@ rule: use [value][
 	]
 ]
 
-load-index: func [location [url!] payload [object!] /local source][
-	host: parse-url location
-	host/path: join %/ any [host/path ""]
-	meta: take load-header payload/content
-	source: attempt [load payload/content]
-
-	if parse any [source []] rule [
-		folder
-	]
-]
-
 fetch: func [location [url!] /text][
 	context [
 		disposition: target: payload: source: meta: content: none
 
 		target: :location
+
+		clean-source: does [
+			require %text/clean.r
+			source: clean payload/content
+		]
+
+		load-source: does [
+			require %markup/header.r
+
+			if all [
+				clean-source
+				content: attempt [load-header source]
+				meta: take content
+				content: attempt [load/all pick content 1]
+			][
+				self
+			]
+		]
+
+		load-index: does [
+			host: parse-url target
+			host/path: join %/ any [host/path ""]
+
+			if all [
+				load-source
+				meta/type = 'index
+				parse content rule
+			][
+				content: folder
+			]
+		]
 
 		if verify [
 			payload: all [
@@ -249,28 +269,8 @@ fetch: func [location [url!] /text][
 					disposition: 'no-resource
 				]
 			]
-
-			all [
-				require %text/clean.r
-				source: clean payload/content
-			][
-				disposition: 'no-header
-			]
-
-			meta: all [
-				require %markup/header.r
-				meta: attempt [load-header source]
-				take meta
-			][
-				disposition: 'no-header
-			]
-
-			meta/type = 'index [
-				disposition: 'script
-			]
 		][
-			disposition: 'index
-			content: load-index location payload
+			disposition: 'ok
 		]
 	]
 ]
