@@ -1,13 +1,13 @@
 REBOL [
 	Title: "Makedoc"
-	Date: 23-Jul-2013
+	Date: 19-Dec-2013
 	Author: ["Gabriele Santilli" "Christopher Ross-Gill"]
 	License: %license.r ; fsm!
 	Type: 'module
 	Root: wrt://system/makedoc/
-	Version: 3.1.0 ; CRG Version
+	Version: 3.2.0
 	Exports: [
-		load-doc make-doc make-para
+		load-doc make-doc make-para form-para
 	]
 ]
 
@@ -38,50 +38,51 @@ load-scanpara: use [para!][
 		in-word: [(in-word?: true)]
 		not-in-word: [(in-word?: false)]
 
-		string: use [mk ex][
+		string: use [mk ex then][
 			[
 				mk: {"} (
 					either error? try [
 						mk: load-next ex: mk
 					][
-						values: "="
+						then: [end skip]
 					][
 						ex: mk/2
+						then: [:ex]
 						values: reduce ['wiki mk/1]
 					]
-				) :ex
+				) then
 			]
 		]
 
-		block: use [mk ex][
+		block: use [mk ex then][
 			[
 				mk: #"[" (
 					either error? try [
 						mk: load-next ex: mk
 					][
-						ex
-						values: "="
+						then: [end skip]
 					][
 						ex: mk/2
 						values: mk/1
+						then: [:ex]
 					]
-				) :ex ; ]
+				) then ; ]
 			]
 		]
 
-		paren: use [mk ex][
+		paren: use [mk ex then][
 			[
 				mk: #"(" (
 					either error? try [
 						mk: load-next ex: mk
 					][
-						ex
-						values: "="
+						then: [end skip]
 					][
 						ex: mk/2
 						values: mk/1
+						then: [:ex]
 					]
-				) :ex ; )
+				) then ; )
 			]
 		]
 
@@ -91,7 +92,6 @@ load-scanpara: use [para!][
 			clear para
 			parse/all paragraph rule
 			new-line/all para false
-			; probe para
 			copy para
 		]
 	]
@@ -217,7 +217,7 @@ fsm!: context [
 						|
 						none
 					] [
-						'return (return-state)
+						some ['return (return-state)]
 						|
 						'rewind? copy val some word! (
 							if not foreach word val [
@@ -287,23 +287,23 @@ load-emitter: use [emitter! para!][
 			]
 		]
 
-		init-emitter: func [doc] [
-			sections/reset
-
-			foreach [word str] doc [
-				if w: find [sect1 sect2 sect3 sect4] word [
-					w: index? w
-					if w <= toc-levels [
-						sn: sections/step w
-						insert insert tail toc capture [make-heading/toc w sn copy/deep str] "<br>^/"
-					]
-				]
-			]
-
-			sections/reset
-
-			if no-title [emit toc state: normal]
-		]
+		; init-emitter: func [doc] [
+		; 	sections/reset
+		; 
+		; 	foreach [word str] doc [
+		; 		if w: find [sect1 sect2 sect3 sect4] word [
+		; 			w: index? w
+		; 			if w <= toc-levels [
+		; 				sn: sections/step w
+		; 				insert insert tail toc capture [make-heading/toc w sn copy/deep str] "<br>^/"
+		; 			]
+		; 		]
+		; 	]
+		; 
+		; 	sections/reset
+		; 
+		; 	if no-title [emit toc state: normal]
+		; ]
 
 		toc: none
 
@@ -341,13 +341,27 @@ load-emitter: use [emitter! para!][
 			][url]
 		]
 
-		hold-values: []
-		hold: func [value [any-type!]][insert hold-values value value]
-		release: does [take hold-values]
+		stack: []
+		hold: func [value [any-type!]][insert stack value value]
+		release: does [take stack]
 
-		out: {}
-		emit: func [value][
-			insert tail out reduce value
+
+		cursor: context [
+			stack: []
+
+			here: out: {}
+			reset: does [clear stack here: out: copy {}]
+			mark: does [insert stack here here: copy {}]
+			unmark: does [here: insert take stack head here]
+			close: does [while [not empty? stack][unmark] copy out]
+		]
+
+		emit: func [value /at-mark][
+			either at-mark [
+				cursor/stack/1: insert cursor/stack/1 reduce value
+			][
+				cursor/here: insert cursor/here reduce value
+			]
 		]
 
 		states: data: word: value: options: none
@@ -387,22 +401,18 @@ load-emitter: use [emitter! para!][
 
 		outline: make fsm! []
 
-		outline-do: func [doc [block!] state [block!]][
-			outline/init state
+		generate: func [doc [block!]] [
+			clear stack
+			cursor/reset
+			sections/reset
+			outline/init get in states 'initial
 			forskip doc 2 [
 				position: doc
 				set [word data] doc
 				outline/event to set-word! word
 			]
 			outline/end
-		]
-
-		generate: func [doc [block!]] [
-			clear hold-values
-			clear out
-			sections/reset
-			outline-do doc get in states 'initial
-			copy out
+			cursor/close
 		]
 	]
 
@@ -423,6 +433,7 @@ grammar!: context [
 	document: %document.r
 	paragraph: %paragraph.r
 	markup: %html.r
+	model: none
 ]
 
 resolve: use [resolve-path][
@@ -444,36 +455,18 @@ resolve: use [resolve-path][
 		if any [file? options/template url? options/template][
 			options/template: resolve-path options/root options/template
 		]
+		if any [file? options/model url? options/model][
+			options/template: resolve-path options/root options/template
+		]
 		options
 	]
 ]
 
-
-load-doc: use [document! form-para][
-	; form-para: func [para [string! block!]][
-	; 	para: compose [(para)]
-	; 
-	; 	join "" collect [
-	; 		foreach part para [
-	; 			case [
-	; 				string? part [keep part]
-	; 				integer? part [keep form to char! part]
-	; 				switch part [
-	; 					<quot> [keep to string! #{E2809C}]
-	; 					</quot> [keep to string! #{E2809D}]
-	; 					<apos> [keep to string! #{E28098}]
-	; 					</apos> [keep to string! #{E28099}]
-	; 				][]
-	; 				char? part [keep part]
-	; 			]
-	; 		]
-	; 	]
-	; ]
-
+load-doc: use [document!][
 	document!: context [
 		options: source: text: document: values: none
 		outline: func [/level depth [integer!]][
-			level: copy/part [sect1 sect2 sect3 sect4] min 1 max 4 any [depth 2]
+			level: copy/part [sect1 sect2 sect3 sect4] max 1 min 4 any [depth 2]
 			remove-each [style para] copy document [
 				not find level style
 			]
@@ -481,11 +474,6 @@ load-doc: use [document! form-para][
 		render: func [/custom options [block! object! none!]][
 			make-doc/custom self make self/options any [options []]
 		]
-		; title: has [title][
-		; 	if parse document [opt ['options skip] 'para set title block! to end][
-		; 		form-para title
-		; 	]
-		; ]
 	]
 
 	load-doc: func [
@@ -497,7 +485,15 @@ load-doc: use [document! form-para][
 		options: make grammar! any [options []]
 		resolve options
 
-		model: make document! any [model []]
+		model: make document! any [
+			model
+			switch type?/word options/model [
+				object! block! [model]
+				file! url! [attempt [load options/model]]
+			]
+			[]
+		]
+
 		model/options: options
 		model/values: copy []
 
@@ -560,6 +556,21 @@ make-doc: func [
 			emitter: load-emitter options/markup [
 				emitter/document: document
 				emitter/generate document/document
+			]
+		]
+	]
+]
+
+form-para: func [paragraph [block! string!] /local pos][
+	join "" collect [
+		foreach part envelop paragraph [
+			switch either tag? part [part][type?/word part] [
+				string! [keep part]
+				integer! [keep encode-utf8 part]
+				char! [keep to string! part]
+				<apos> </apos> [keep "'"]
+				<sb> ["["] </sb> ["]"]
+				<quot> </quot> [keep "^""]
 			]
 		]
 	]

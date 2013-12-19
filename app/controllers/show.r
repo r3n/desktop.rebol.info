@@ -68,4 +68,12 @@ route () to %folder [
 		item/clean-source
 		render/template %text %text.rsp
 	]
+
+	get %.rmd [
+		require %makedoc/makedoc.r
+		render/template make-doc/custom item/clean-source  [
+			model: wrt://system/makedoc/model.r
+			template: wrt://system/makedoc/makedoc.rsp
+		] "<%= yield %>"
+	]
 ]

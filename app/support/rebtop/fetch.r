@@ -3,7 +3,7 @@ REBOL [
 	Date: 21-Oct-2013
 	Author: "Christopher Ross-Gill"
 	Type: 'module
-	Exports: [fetch]
+	Exports: [resolve fetch]
 ]
 
 ; need to separate fetch function from content-sniffer.

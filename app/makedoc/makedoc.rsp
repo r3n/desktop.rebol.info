@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MakeDoc</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+	<div class="jumbotron">
+		<h1><%== form-para document/title %></h1>
+	</div>
+
+	<div class="row">
+		<div class="col-md-3" role="menu">
+<%= document/contents %>
+		</div>
+		<div class="col-md-9" role="body">
+<%= document/render %>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

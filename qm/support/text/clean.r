@@ -50,7 +50,7 @@ clean: use [codepoints encode-utf8][
 		string [string! binary!] "String to convert"
 		/local here char
 	][
-		string: here: as-binary trim/auto string
+		string: here: as-binary replace/all trim/auto string crlf newline
 
 		while [here: invalid-utf? here][
 			change/part here case [

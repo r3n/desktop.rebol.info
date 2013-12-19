@@ -486,11 +486,41 @@ context [
 	wiki: [some [wiki* | utf-8]]
 	ws*: white-space: [some ws]
 
+	encode-utf8: func [
+		"Encode a code point in UTF-8 format" 
+		char [integer!] "Unicode code point"
+	][
+		as-string to binary! reduce case [
+			char <= 127 [[char]]
+
+			char <= 2047 [[
+				char and 1984 / 64 + 192 
+				char and 63 + 128
+			]]
+
+			char <= 65535 [[
+				char and 61440 / 4096 + 224 
+				char and 4032 / 64 + 128 
+				char and 63 + 128
+			]]
+
+			char <= 2097151 [[
+				char and 1835008 / 262144 + 240 
+				char and 258048 / 4096 + 128 
+				char and 4032 / 64 + 128 
+				char and 63 + 128
+			]]
+
+			; true [[]]
+			true [[40 63 41]]
+		]
+	]
+
 	amend: func [rule [block!]][
 		bind rule 'self
 	]
 
-	export [get-ucs-code decode-utf amend]
+	export [get-ucs-code decode-utf encode-utf8 amend]
 ]
 
 ;--## STRING HELPERS
