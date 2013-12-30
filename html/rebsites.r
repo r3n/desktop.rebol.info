@@ -30,15 +30,11 @@ folder "RM2" http://richard.menu.free.fr/rebol/index.r icon site info "Rebol/RAD
 folder "plegoff" http://pl.legoff.free.fr/docs/informatique/rebol/index.r icon site info "home of plegoff" 
 folder "TGD" http://www.tgd-consulting.de/index.r icon site info {TGD-Consulting' s REBsite: Home of Serve-It! and fancy REBgames & REBtools. Take a look @ ...} 
 folder "Kilter" http://kilter.memebot.com/rebsite/index.r icon site info "Kilter's Kastle" 
-folder "Sguish" http://sguish.50webs.org/index.r icon site info "Italian blog about Rebol!" 
-folder "Sguish ITA" http://sguish.50webs.org/index.r icon site info "This is an italian site dedicated to Rebol!" 
+folder "Sguish" http://sguish.50webs.org/index.r icon site info "This is an italian site dedicated to Rebol!" 
 folder "Luis" http://luisrodriguezjurado.googlepages.com/index.r icon site info "Luis" 
 folder "Andwo" http://www.valknut.org/index.r icon site info {development of a free of charge healing service with the help of rebol} 
-folder "UA FIG" http://www.forth.org.ua/index.r icon site info "Ukrainian Forth Interest Group" 
-folder "UAForth" http://forth.org.ua/index.r icon site info "UAForth" 
+folder "UAForth" http://forth.org.ua/index.r icon site info "Ukrainian Forth Interest Group" 
 folder "LDCI" http://perso.numericable.fr/frajouen/index.r icon site info "A few words about your site go here." 
 folder "MaxV" http://www.maxvessi.net/rebsite/index.r icon site info "My works and ideas" 
-folder "forth.org.ua" http://forth.org.ua/index.r icon site info "forth.org.ua" 
-folder "Test123" http://www.rebol.com/index.r icon site info "Testing it" 
 folder "Jplprog" http://www.jplprog.com/rebol/index.r icon site info "My web reb site with applications." 
 folder "SalWare" http://salware.altervista.org/Rebol/index.r icon site info "SalWare Rebol Site"

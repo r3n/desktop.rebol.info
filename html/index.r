@@ -20,6 +20,10 @@ info "World Wide Reb Sites"
 link "Source" https://github.com/revault/desktop.rebol.info
 info "This project's source on GitHub"
 
+link "Chat" http://chat.stackoverflow.com/rooms/291/rebol-and-red
+icon http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png
+info "[Rebol and Red]"
+
 link "Rebol" http://rebol.com/
 info "Home of Rebol"
 
