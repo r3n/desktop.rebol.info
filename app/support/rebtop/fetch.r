@@ -208,6 +208,8 @@ fetch: func [location [url!] /text][
 
 		clean-source: does [
 			require %text/clean.r
+			; kludge to fix Ukrainian site's display
+			replace/all payload/content 64#{0+rw4L/t8fzq6Ok=} 64#{0KPQutGA0LDRl9C90YHRjNC60LjQuQ==}
 			source: clean payload/content
 		]
 
