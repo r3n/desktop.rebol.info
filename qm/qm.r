@@ -1,7 +1,7 @@
 REBOL [
 	Title: "QuarterMaster"
 	Author: "Christopher Ross-Gill"
-	Version: 0.7.4
+	Version: 0.7.5
 	Notes: {Warning: Work-In-Progress - no liabilities for damage, etc.}
 	License: http://creativecommons.org/licenses/by-sa/3.0/
 	Needs: [2.7.8 shell]
@@ -50,7 +50,10 @@ system/error/user/type: "QuarterMaster Error"
 range!: :pair! ; until REBOL v3
 else: true ; for 'case statements
 
-qm/profile: system/script/args
+qm/profile: any [
+	system/script/args
+	system/script/parent/header
+]
 
 settings: qm/settings: construct/with any [
 	qm/profile/settings
@@ -188,28 +191,6 @@ context [
 		head either only [insert/only stack :value][insert stack :value]
 	]
 
-	pop: take: func [series [series! port! none!] /last /part range [integer!] /local result][
-		range: any [range 1]
-		case [
-			none? series [return none]
-			last [series: skip tail series negate abs range]
-		]
-		either part [
-			result: copy/part series range
-			remove/part series range
-		][
-			result: pick series 1
-			remove series
-		]
-		result
-	]
-
-	pop*: func [stack [series! port!] /local val][
-		val: pick stack 1
-		remove stack
-		:val
-	]
-
 	append: func [
 		[catch]
 		{Appends a value to the tail of a series and returns the series head.} 
@@ -227,12 +208,12 @@ context [
 
 	flatten: func [block [any-block!] /once][
 		once: either once [
-			[(block: insert block pop block)]
+			[(block: insert block take block)]
 		][
-			[(insert block pop block)]
+			[(insert block take block)]
 		]
 		parse block [
-			any [block: any-block! (insert block pop block) :block | skip]
+			any [block: any-block! (insert block take block) :block | skip]
 		]
 		head block
 	]
@@ -375,10 +356,14 @@ context [
 		]
 	]
 
+	neaten: func [block [block!] /pairs /flat][
+		new-line/all/skip block not flat either pairs [2][1]
+	]
+
 	export [
-		push take pop append flatten map each categorize
+		push append flatten map each categorize
 		get-choice get-class compose-path
-		prepare link-to paginate some change-status
+		prepare link-to paginate some change-status neaten
 	]
 ]
 
@@ -410,7 +395,7 @@ context [
 	get-from: func [series 'key][
 		key: copy envelop key
 		while [all [not tail? key any-block? series]][
-			series: select series pop key
+			series: select series take key
 		]
 		all [tail? key series]
 	]
@@ -863,23 +848,40 @@ context [
 		]
 	]
 
-	get-iso-year: func [year [integer!] /local d1 d2][
-		d1: to date! join "4-1-" year
-		d2: to date! join "28-12-" year
-		return reduce [d1 + 1 - d1/weekday d2 + 7 - d2/weekday]
+	pad-precise: func [seconds [number!] /local out][
+		seconds: form make time! seconds
+		head change copy "00.000000" find/last/tail form seconds ":"
 	]
 
-	to-iso-week: func [date [date!] /local out d1 d2][
-		out: 0x0
-		set [d1 d2] get-iso-year out/y: date/year
-
-		case [
-			date < d1 [d1: first get-iso-year out/y: date/year - 1]
-			date > d2 [d1: first get-iso-year out/y: date/year + 1]
+	to-iso-week: use [get-iso-year][
+		get-iso-year: func [year [integer!] /local d1 d2][
+			d1: to-date join "4-Jan-" year
+			d2: to-date join "28-Dec-" year
+			reduce [d1 + 1 - d1/weekday d2 + 7 - d2/weekday]
 		]
 
-		out/x: date + 8 - date/weekday - d1 / 7
-		out
+		func [date [date!] /local out d1 d2][
+			out: 0x0
+			set [d1 d2] get-iso-year out/y: date/year
+
+			case [
+				date < d1 [d1: first get-iso-year out/y: date/year - 1]
+				date > d2 [d1: first get-iso-year out/y: date/year + 1]
+			]
+
+			out/x: date + 8 - date/weekday - d1 / 7
+			out
+		]
+	]
+
+	to-epoch-time: func [date [date!]][
+		; date/time: date/time - date/zone
+		date: form any [
+			attempt [to integer! difference date 1-Jan-1970/0:0:0]
+			date - 1-Jan-1970/0:0:0 * 86400.0
+		]
+		clear find/last date "."
+		date
 	]
 
 	date-codes: [
@@ -891,6 +893,7 @@ context [
 		#"d" [pad date/day 2]
 		#"D" [date/year #"-" pad date/month 2 #"-" pad date/day 2]
 		#"e" [date/day]
+		#"f" [find/tail pad-precise time/second "."]
 		#"g" [pad (second to-iso-week date) // 100 2]
 		#"G" [second to-iso-week date]
 		#"h" [time/hour + 11 // 12 + 1]
@@ -903,7 +906,8 @@ context [
 		#"M" [pad time/minute 2]
 		#"p" [pick ["am" "pm"] time/hour < 12]
 		#"P" [pick ["AM" "PM"] time/hour < 12]
-		#"S" [pad round time/second 2]
+		#"s" [to-epoch-time date]
+		#"S" [pad to integer! time/second 2]
 		#"t" [#"^-"]
 		#"T" [pad time/hour 2 #":" pad time/minute 2 #":" pad round time/second 2]
 		#"u" [date/weekday]
@@ -1429,18 +1433,18 @@ context [
 ;-------------------------------------------------------------------##
 context [
 	sw*: system/words
-	rights: [
+	rights: [ ; Permissions can be problematic.
 		folder [
 			owner-read: group-read:
 			owner-write: group-write:
 			owner-execute: group-execute: #[true]
-			world-read: world-write: world-execute: #[false]
+			world-read: world-write: world-execute: #[true] ; #[false]
 		]
 		file [
 			owner-read: group-read:
 			owner-write: group-write: #[true]
 			owner-execute: group-execute: #[false]
-			world-read: world-write: world-execute: #[false]
+			world-read: world-write: #[true] world-execute: #[false]
 		]
 	]
 
@@ -2017,7 +2021,7 @@ context [
 	add-qtag em [{<em} :class {>} label {</em>}][label: string! class: any refinement!][]
 
 	build-tag: func [[catch] spec [block!] /local cmd action][
-		either action: select qtags cmd: pop spec: compose spec [
+		either action: select qtags cmd: take spec: compose spec [
 			throw-on-error [action spec]
 		][
 			rejoin ["!!! Invalid QuickTag Type: &lt;" cmd "&gt;"]
@@ -3488,7 +3492,7 @@ context [
 			data: []
 			errors: []
 
-			get: func [key [word!]][select data key]
+			get: func [key [word!]][foreach [k v] data [if k = key [break/return v]]]
 			set: func [key [word!] value][unset key value repend data [key value] value]
 			unset: func [key [word!]][remove-each [k v] data [k = key]]
 			inject: func [pending [block! none!] /only keys [block!] /except exceptions [block!]][
@@ -3552,6 +3556,7 @@ context [
 			]
 
 			destroy: does [
+				on-delete
 				unless new? [delete-db owner id]
 				self
 			]
@@ -4058,6 +4063,7 @@ context [
 		'url [file! url! path! paren! none!]
 		/back /status response-code [integer!]
 		/format extension [file!]
+		/content body [file! string! url! binary! none!]
 	][
 		if rendered? [raise "Already Rendered!"]
 		if paren? url compose [url: (url)]
@@ -4203,7 +4209,7 @@ context [
 				(all [ctrl/name: name name <> ""])
 				(exists? file: join root [name %.r])
 				(block? values: load/header file)
-				('controller = get in ctrl/header: pop values 'type)
+				('controller = get in ctrl/header: take values 'type)
 			][
 				return none
 			]
@@ -4511,9 +4517,9 @@ if qm/live? [
 
 	try-else [
 		with qm [
+			export [probe]
 			protect 'request
 			protect 'response
-			export [probe]
 			engage-model
 			route request response
 			disengage-model
@@ -4527,8 +4533,8 @@ if qm/live? [
 		reason-message: reform bind envelop system/error/(reason/type)/(reason/id) reason
 		reason: rejoin [
 			"** " reason-type ": " reason-message
-			"^/** Where: " mold reason/where
-			"^/** Near: " mold reason/near
+			"^/** Where: " mold get in reason 'where
+			"^/** Near: " mold get in reason 'near
 		]
 
 		trims: func [string [string!]][
@@ -4549,7 +4555,10 @@ if qm/live? [
 
 		attempt [
 			save to url! form-date/gmt now "wrt://space/crash/err%Y%m%d-%H%M%S.txt" reduce [
-				now qm/request/server-name form qm/request/request-uri reason
+				now qm/request/remote-addr
+				join qm/request/server-name form qm/request/request-uri
+				select qm/request/other-headers "HTTP_USER_AGENT"
+				reason
 			]
 		]
 	]
