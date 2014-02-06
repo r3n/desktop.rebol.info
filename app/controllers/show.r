@@ -45,6 +45,7 @@ route () to %folder [
 			require %display/link-up.r
 			require %display/css-properties.r
 			folder: item/content
+			images?: false
 			title: any [folder/title "Folder Content"]
 		][
 			reject 415 %not-rebol.rsp

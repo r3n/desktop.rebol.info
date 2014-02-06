@@ -16,6 +16,7 @@ if any [folder/color folder/image folder/text not empty? folder/effects][
 <li>
 	<a href="<%== link-up/directive item/target item/type %>" title="<%== any [item/info item/name "Picture"] %>"<%
 		if all [item/type = 'file find [%.gif %.png %.jpg %.svg] suffix? item/target][
+			images?: true
 		%> data-lightbox="desktop"<% ] %>>
 		<figure>
 			<%! img (
@@ -31,5 +32,13 @@ if any [folder/color folder/image folder/text not empty? folder/effects][
 	]
 
 %>
-</ul>
+</ul><%
+
+if images? [
+%>
+<script src="//code.jquery.com/jquery.js"></script>
+<script src="/assets/lightbox/lightbox.js"></script><%
+]
+
+%>
 </body>

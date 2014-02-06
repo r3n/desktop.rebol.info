@@ -5,5 +5,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="/assets/rebtop.css" type="text/css" media="screen" title="RebTop" charset="utf-8" />
+<link rel="stylesheet" href="/assets/lightbox/lightbox.css" type="text/css" media="screen" title="RebTop" charset="utf-8" />
 </head>
 <%= yield %></html>
