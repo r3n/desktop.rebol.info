@@ -17,6 +17,7 @@ host: meta: folder: item: none
 
 folder!: context [
 	title: "Index"
+	link:
 	summary: none
 	updated:
 	expires:
@@ -235,6 +236,7 @@ fetch: func [location [url!] /text][
 				meta/type = 'index
 				parse content rule
 			][
+				folder/link: target
 				content: folder
 			]
 		]

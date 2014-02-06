@@ -6,7 +6,7 @@ if any [folder/color folder/image folder/text not empty? folder/effects][
 ]
 
 %>
-<h1><%== title %></h1><% if folder/summary [ %>
+<h1><%== title %> <sup><%! a (join %/show.r? folder/link) %>(source)</a></sup></h1><% if folder/summary [ %>
 <p><%== folder/summary %></p><% ] %>
 <ul class="icons"><%
 

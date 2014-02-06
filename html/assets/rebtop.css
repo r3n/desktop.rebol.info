@@ -52,6 +52,11 @@ h1 {
 	font-weight: bold;
 }
 
+h1 sup {
+	font-size: 0.5em;
+	font-weight: normal;
+}
+
 p, pre, ul li {
 	margin: 1em 0;
 }
