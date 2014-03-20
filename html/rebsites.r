@@ -9,6 +9,8 @@ folder "Jeff's" http://www.cs.unm.edu/~whip/index.r icon site info none
 folder "Code C." http://www.codeconscious.com/index.r icon site info "codeconscious.com" 
 folder "Anton" https://s3-ap-southeast-1.amazonaws.com/antonrolls/rebol/index.r icon site info {Lots of VID GUI styles, utilities, library functions, documentation.} 
 folder "Chris RG" http://www.ross-gill.com/index.r icon site info "Isle of Arran" 
+folder "H-O-H" http://www.h-o-h.org/index.r icon site info "Some Rebol Scripts by Ingo Hohmann"
+folder "REBolek" http://www.sweb.cz/rebolek/index.r icon site info "REBolek scripts"
 folder "Fantam" http://perso.worldonline.fr/mutant/Code/rebol/index.r icon site info "A few scripts..." 
 folder "Rebol.it" http://www.rebol.it/index.r icon site info "The italian REB site - Il sito REB italiano" 
 folder "Etienne" http://etienne.alaurent.free.fr/index.r icon site info {Home of "VIRTUAL Office" project} 
