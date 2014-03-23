@@ -5,6 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+<style type="text/css"><!--
+figure {margin: 1em auto;}
+img {max-width: 100%; box-shadow: 1px 1px 3px rgba(0,0,0,0.2);}
+--></style>
 </head>
 <body>
 
