@@ -78,21 +78,26 @@ resolve: use [clean][
 	clean: func [path][
 		either find/match path "/" [path][
 			any [
-				attempt [clean-path host/path/:path]
+				attempt [
+					host/path: any [host/path %""]
+					clean-path host/path/:path
+				]
 				%/index.r
 			]
 		]
 	]
 
-	func [path [file! url! word! email!]][
-		switch type?/word path [
-			url! word! [path]
-			email! [to url! join "mailto:" path]
-			file! [
-				rejoin [
-					to url! host/scheme "://" host/host
-					either host/port-id [join ":" host/port-id][""]
-					clean path
+	func [[catch] path [file! url! word! email!]][
+		throw-on-error [
+			switch type?/word path [
+				url! word! [path]
+				email! [to url! join "mailto:" path]
+				file! [
+					rejoin [
+						to url! host/scheme "://" host/host
+						either host/port-id [join ":" host/port-id][""]
+						clean path
+					]
 				]
 			]
 		]
@@ -206,6 +211,7 @@ fetch: func [location [url!] /text][
 		disposition: target: payload: source: meta: content: none
 
 		target: :location
+		parse-url target
 
 		clean-source: does [
 			require %text/clean.r
@@ -228,7 +234,6 @@ fetch: func [location [url!] /text][
 		]
 
 		load-index: does [
-			host: parse-url target
 			host/path: join %/ any [host/path ""]
 
 			if all [
@@ -243,7 +248,7 @@ fetch: func [location [url!] /text][
 
 		if verify [
 			payload: all [
-				require %external/rest.r
+				require %protocols/rest.r
 				attempt [read compose [scheme: 'rest url: (location) timeout: 5]]
 			][
 				disposition: 'bad-address
@@ -274,6 +279,7 @@ fetch: func [location [url!] /text][
 				]
 			]
 		][
+			host: parse-url target
 			disposition: 'ok
 		]
 	]

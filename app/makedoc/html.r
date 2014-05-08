@@ -91,10 +91,11 @@ make-smarttag: func [spec [block!] /local name val tag errs rel result falback][
 		img image icon [
 			either tag: match/report-to tag [
 				src: file! | url! else "Image Tag Needs Valid Source"
-				alt: string! else "Image tag requires ALT text"
+				alt: opt string! else "Image tag requires ALT text"
 				size: opt pair!
 			] errs [
 				use [width height] with/only tag [
+					alt: any [alt "[ Image ]"]
 					size: any [size -1x-1]
 					width: all [size/x > -1 size/x]
 					height: all [size/y > -1 size/y]
@@ -134,18 +135,20 @@ make-smarttag: func [spec [block!] /local name val tag errs rel result falback][
 ]
 
 emit-image: func [spec [block!] /local out image][
-	either image: match spec [
-		src: file! | url!
+	errs: []
+	either image: match/report-to spec [
+		src: file! | url! else "Image reference (file or url) is required"
 		size: opt pair!
-		alt: string!
+		alt: opt string! else "Alt text is required"
 		title: opt string!
 		href: opt file! | url!
-	][
+	] errs [
 		if file? image/src [
 			image/src: resolve image/src
 		]
 		out: copy []
 		with image [
+			alt: any [alt "[ Image ]"]
 			src: to-attr src
 			alt: to-attr alt
 			title: to-attr title
@@ -160,7 +163,14 @@ emit-image: func [spec [block!] /local out image][
 
 		emit [{<div class="img">^/} press out {^/</div>}]
 	][
-		raise ["Invalid Image Spec #" sanitize mold spec]
+		raise join "Image Spec Error: " remove collect [
+			foreach [key reasons] errs [
+				foreach reason reasons [
+					keep "; "
+					keep sanitize reason
+				]
+			]
+		]
 	]
 ]
 

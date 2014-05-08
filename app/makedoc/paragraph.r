@@ -60,7 +60,7 @@ not-in-word any [
 		| "*" (emit/after <b> </b>)
 		| (emit/after <i> </i>)
 	]
-	; | #"<" ["i>" (emit <i>) | "/i>" (emit </i>) | "b>" (emit <b>) | "/b>" (emit </b>)]
+	| #"<" ["i>" (emit <i>) | "/i>" (emit </i>) | "b>" (emit <b>) | "/b>" (emit </b>)]
 	| #"<" (emit #"<") | #">" (emit #">") | #"&" (emit #"&")
 	; | #"~" (emit/after <code> </code>)
 	; | #"*" (emit/after <b> </b>)
