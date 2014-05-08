@@ -1,9 +1,9 @@
-REBOL [
+Rebol [
 	title: "AltXML"
 	file: %altxml.r
 	author: "Christopher Ross-Gill"
-	date: 7-June-2009
-	version: 0.2.0
+	date: 12-Feb-2014
+	version: 0.3.1
 	type: 'module
 	exports: [decode-xml load-xml]
 ]
@@ -119,14 +119,15 @@ load-xml: use [
 			find value tag
 		]
 
-		get-by-tag: func [tag /local rule hits hit][
-			hits: copy []
-			parse tree rule: [
-				some [
-					opt [hit: tag skip (append hits make-node hit) :hit]
-					skip [into rule | skip]
+		get-by-tag: func [tag /local rule hit][
+			collect [
+				parse tree rule: [
+					some [
+						opt [hit: tag skip (keep make-node hit) :hit]
+						skip [into rule | skip]
+					]
 				]
-			] hits
+			]
 		]
 
 		get-by-id: func [id /local rule hit at][
@@ -135,7 +136,8 @@ load-xml: use [
 					  at: tag! into [thru #id id to end] (hit: any [hit make-node at])
 					| skip [into rule | skip]
 				]
-			] hit
+			]
+			hit
 		]
 
 		text: has [rule text][
@@ -157,20 +159,26 @@ load-xml: use [
 			]
 		]
 
-		get: func [name [issue! tag!] /node /local hit at dig][
-			if parse tree [
-				tag! into [
-					any [
-						  at: name [block! (hit: make-node at) | set hit skip] to end
-						| [issue! | tag! | file!] skip
+		get: func [name [issue! tag!] /node /text /local hit at][
+			if all [
+				parse tree [
+					tag! into [
+						any [
+							  at: name skip (hit: make-node at) to end
+							| [issue! | tag! | file!] skip
+						]
 					]
 				]
+				object? hit
 			][
-				case/all [
-					all [not node object? hit][hit: hit/text]
-					string? hit [trim trim/auto hit]
+				any [
+					case [
+						node [hit]
+						text [trim trim/auto hit/text]
+						string? hit/value [hit/text]
+					]
+					hit
 				]
-				hit
 			]
 		]
 
@@ -188,85 +196,82 @@ load-xml: use [
 
 		parent: has [branch]["Need Branch" none]
 
-		children: has [hits at][
-			hits: copy []
-			parse case [
-				block? value [value] string? value [reduce [%.txt value]] none? value [[]]
-			][
-				any [issue! skip]
-				any [at: [tag! | file!] skip (append hits make-node at)]
+		children: has [at][
+			collect [
+				parse case [
+					block? value [value] string? value [reduce [%.txt value]] none? value [[]]
+				][
+					any [issue! skip]
+					any [at: [tag! | file!] skip (keep make-node at)]
+				]
 			]
-			hits
 		]
 
-		path: func [path [block! path!] /local result selector kids][
+		attributes: has [at][
+			collect [
+				parse either block? value [value][[]] [
+					any [at: issue! skip (keep make-node at)] to end
+				]
+			]
+		]
+
+		path: func [[catch] path [block! path!]][
 			unless parse path [some ['* [tag! | issue!] | tag! | issue! | integer!] opt '?][
-				do make error! "Invalid Path Spec"
+				make error! "Invalid Path Spec"
 			]
 
-			result: :this
+			use [result selector kids][
+				result: :self
 
-			unless parse path [
-				opt [tag! (either result/name = path/1 [result: compose [(any [:result []])]][result: none])]
+				unless parse path [
+					opt [tag! (unless result/name = path/1 [result: none])]
 
-				any [
-					selector:
-					['* [tag! | issue!]]
-					(
-						kids: collect [
-							foreach kid compose [(any [:result []])][
-								keep kid
+					some [
+						selector:
+						['* [tag! | issue!]]
+						(
+							result: collect [
+								foreach kid envelop any [result []] [
+									keep kid/get-by-tag selector/2
+								]
 							]
-						]
-
-						result: collect [
-							foreach kid kids [
-								keep kid/get-by-tag selector/2
+						)
+						|
+						[tag! | issue!] (
+							remove-each kid result: collect [
+								foreach kid envelop any [result []][
+									keep kid/attributes
+									keep kid/children
+								]
+							][
+								not selector/1 = kid/name
 							]
-						]
-					)
-					|
-					[tag! | issue!] (
-						kids: collect [
-							foreach kid compose [(any [:result []])] [
-								keep kid/attributes
-								keep kid/children
+						)
+						|
+						integer! (
+							result: pick envelop any [result []] selector/1
+						)
+					]
+					opt [
+						'? (
+							case [
+								block? result [
+									result: collect [
+										foreach kid result [keep kid/value]
+									]
+								]
+								object? result [
+									result: result/value
+								]
 							]
-						]
-
-						remove-each kid kids [not selector/1 = kid/name]
-						result: :kids
-					)
-					|
-					integer! (
-						result: pick compose [(any [:result []])] selector/1
-					)
+						)
+					]
+				][
+					make error! rejoin ["Error at: " mold selector]
 				]
 
-				opt [
-					'? (
-						case [
-							block? result [
-								kids: copy :result
-								result: collect [foreach kid kids [keep/only kid/value]]
-							]
-							object? result [
-								result: result/value
-							]
-						]
-					)
-				]
-			][do make error! rejoin ["Error at: " mold selector]]
-
-			result
-		]
-
-		attributes: has [hits at][
-			hits: copy []
-			parse either block? value [value][[]] [
-				any [at: issue! skip (append hits make-node at)] to end
+				result
 			]
-			hits
 		]
 
 		clone: does [make-node tree]
