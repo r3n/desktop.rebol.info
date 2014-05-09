@@ -4,6 +4,7 @@ file " About " http://www.rebol.net/reb/about-sites.txt icon text info none
 link " Add Site " https://github.com/revault/desktop.rebol.info/blob/master/html/rebsites.r icon rebol info "Add your site here"
 file " Site Notes" http://www.rebol.net/reb/site-note.txt icon text info "A note about empty sites." 
 folder "Rebol" http://www.rebol.com/index.r icon site info "REBOL Technologies" 
+folder "RebolBot" http://rebol.info/index.r icon site info "RebolBot"
 folder "Library" http://www.rebol.org/library/reb/index.r icon site info "The shared script library"
 folder "Jeff's" http://www.cs.unm.edu/~whip/index.r icon site info none 
 folder "Code C." http://www.codeconscious.com/index.r icon site info "codeconscious.com" 
