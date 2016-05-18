@@ -1,4 +1,4 @@
-REBOL [
+Rebol [
 	Title: "Rebol Desktop Project"
 	Date: 13-Dec-2013
 	Author: "Christopher Ross-Gill"
@@ -21,7 +21,7 @@ link "Source" https://github.com/revault/desktop.rebol.info
 info "This project's source on GitHub"
 
 link "Chat" http://rebolsource.net/go/chat-faq
-icon http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png
+icon http://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon.png
 info "[Rebol and Red]"
 
 link "Rebol" http://rebol.com/
