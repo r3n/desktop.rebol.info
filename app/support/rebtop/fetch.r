@@ -1,4 +1,4 @@
-REBOL [
+Rebol [
 	Title: "Desktop Fetcher"
 	Date: 21-Oct-2013
 	Author: "Christopher Ross-Gill"

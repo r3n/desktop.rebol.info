@@ -1,4 +1,4 @@
-REBOL [
+Rebol [
 	Title: "Link-Up"
 	Date: 24-Nov-2013
 	Author: "Christopher Ross-Gill"

@@ -1,4 +1,4 @@
-REBOL [
+Rebol [
 	Title: "Load Header"
 	Date: 13-Nov-2013
 	Author: "Christopher Ross-Gill"
@@ -13,7 +13,11 @@ script?: use [space id mark type][
 	id: [
 		any space mark: 
 		any ["[" mark: (mark: back mark) any space]
-		copy type ["REBOL" | "Red" opt "/System" | "Topaz" | "Freebell"]
+		copy type ["Rebol" | "Red" opt "/System" | "World" | "Topaz" | "Freebell"] (
+			type: first find [
+				"Rebol" "Red" "Red/System" "World" "Topaz" "Freebell"
+			] type
+		)
 		any [space | newline | crlf]
 		"[" to end
 	]
@@ -37,5 +41,6 @@ load-header: func [[catch] source [string! binary!] /local header][
 	unless header: script? source [make error! "Source does not contain header."]
 	header: find next header "["
 	unless header: attempt [load/next header][make error! "Header is incomplete."]
+	while [mark: find header/1 any-function!][change mark "No functions here!"]
 	reduce [construct/with header/1 system/standard/script header/2]
 ]

@@ -1,4 +1,4 @@
-REBOL [
+Rebol [
 	Title: "Rebol Desktop Directory Viewer"
 	Date: 21-Oct-2013
 	Author: "Christopher Ross-Gill"
@@ -46,7 +46,7 @@ route () to %folder [
 			require %display/css-properties.r
 			folder: item/content
 			images?: false
-			title: any [folder/title "Folder Content"]
+			title: either string? folder/title [folder/title]["Folder Content"]
 		][
 			reject 415 %not-rebol.rsp
 		]
@@ -55,6 +55,10 @@ route () to %folder [
 	get %.r [
 		either item/load-source [
 			meta: item/meta
+			lang: script?/language item/source
+			unless string? meta/title [meta/title: "Script"]
+			unless string? meta/purpose [meta/purpose: join lang " Script."]
+
 			require %display/link-up.r
 			require %markup/color-code.r
 			render/template color-code item/source %script.rsp

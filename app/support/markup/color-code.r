@@ -23,13 +23,13 @@ color-code: use [out emit whitelist emit-var emit-header rule value][
 		| "opensource.org"
 	]
 
-	emit-var: func [value start stop /local type out][
+	emit-var: func [value [any-type!] start stop /local type out][
 		either none? :value [type: "cmt"][
 			if path? :value [value: first :value]
 
 			type: either word? :value [
 				any [
-					all [find [Rebol Red Topaz Freebell] value "rebol"]
+					all [find [Rebol Red Topaz Freebell] :value "rebol"]
 					all [value? :value any-function? get :value "function"]
 					all [value? :value datatype? get :value "datatype"]
 					"word"
@@ -41,9 +41,11 @@ color-code: use [out emit whitelist emit-var emit-header rule value][
 
 		out: sanitize copy/part start stop
 
+		if out = "REBOL" [out: "Rebol"]
+
 		emit either all [
-			url? value
-			parse/all value [
+			url? :value
+			parse/all :value [
 				"http" opt "s" "://" whitelist to end
 			]
 		][
