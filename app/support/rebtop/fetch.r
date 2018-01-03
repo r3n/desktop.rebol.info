@@ -169,6 +169,7 @@ rule: use [value][
 				| 'info set value string! (item/info: value)
 				| 'edge (item/edge: true)
 				| 'icon set value [file! | url! | word!] (item/icon: resolve value)
+				| 'effect block!
 				| into [
 					any [
 						  set value ['fit | 'aspect | 'extend | 'tile] (item/stretch: value)
